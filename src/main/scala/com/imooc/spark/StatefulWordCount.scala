@@ -18,7 +18,7 @@ object StatefulWordCount {
     // 在生产环境中，建议大家把checkpoint设置到HDFS的某个文件夹中
     ssc.checkpoint(".")
 
-    val lines = ssc.socketTextStream("localhost", 6789)
+    val lines = ssc.socketTextStream("hadoop000", 6789)
 
     val result = lines.flatMap(_.split(" ")).map((_,1))
     val state = result.updateStateByKey[Int](updateFunction _)
