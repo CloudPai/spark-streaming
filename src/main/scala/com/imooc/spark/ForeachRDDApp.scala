@@ -12,7 +12,7 @@ object ForeachRDDApp {
 
   def main(args: Array[String]): Unit = {
 
-    val sparkConf = new SparkConf().setAppName("ForeachRDDApp").setMaster("local[2]")
+    val sparkConf = new SparkConf()//.setAppName("ForeachRDDApp").setMaster("local[2]")
     val ssc = new StreamingContext(sparkConf, Seconds(5))
 
 
