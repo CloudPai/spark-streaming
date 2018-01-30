@@ -1,8 +1,8 @@
 package com.imooc.spark.project.spark
 
 //import com.imooc.spark.project.dao.{CourseClickCountDAO, CourseSearchClickCountDAO}
-//import com.imooc.spark.project.domain.{ClickLog, CourseClickCount, CourseSearchClickCount}
-//import com.imooc.spark.project.utils.DateUtils
+import com.imooc.spark.project.domain.{ClickLog, CourseClickCount, CourseSearchClickCount}
+import com.imooc.spark.project.utils.DateUtils
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.kafka.KafkaUtils
 import org.apache.spark.streaming.{Seconds, StreamingContext}
@@ -31,29 +31,29 @@ object ImoocStatStreamingApp {
     val messages = KafkaUtils.createStream(ssc, zkQuorum, groupId, topicMap)
 
     // 测试步骤一：测试数据接收
-    messages.map(_._2).count().print
+//    messages.map(_._2).count().print
 
 //    // 测试步骤二：数据清洗
-//    val logs = messages.map(_._2)
-//    val cleanData = logs.map(line => {
-//      val infos = line.split("\t")
+    val logs = messages.map(_._2)
+    val cleanData = logs.map(line => {
+      val infos = line.split("\t")
 //
-//      // infos(2) = "GET /class/130.html HTTP/1.1"
-//      // url = /class/130.html
-//      val url = infos(2).split(" ")(1)
-//      var courseId = 0
+      // infos(2) = "GET /class/130.html HTTP/1.1"
+//      // url = /class/130.html、
+      val url = infos(2).split(" ")(1)
+      var courseId = 0
 //
 //      // 把实战课程的课程编号拿到了
-//      if (url.startsWith("/class")) {
-//        val courseIdHTML = url.split("/")(2)
-//        courseId = courseIdHTML.substring(0, courseIdHTML.lastIndexOf(".")).toInt
-//      }
+      if (url.startsWith("/class")) {
+        val courseIdHTML = url.split("/")(2)
+        courseId = courseIdHTML.substring(0, courseIdHTML.lastIndexOf(".")).toInt
+      }
 //
-//      ClickLog(infos(0), DateUtils.parseToMinute(infos(1)), courseId, infos(3).toInt, infos(4))
-//    }).filter(clicklog => clicklog.courseId != 0)
+      ClickLog(infos(0), DateUtils.parseToMinute(infos(1)), courseId, infos(3).toInt, infos(4))
+    }).filter(clicklog => clicklog.courseId != 0)
 //
 //
-////    cleanData.print()
+      cleanData.print()
 //
 //    // 测试步骤三：统计今天到现在为止实战课程的访问量
 //
